@@ -8,7 +8,7 @@ fn greet(name: &str) -> String {
 
 #[tauri::command]
 async fn open_command_palette(app: tauri::AppHandle) {
-    let command_palette_window = tauri::WebviewWindowBuilder::new(
+    let _ = tauri::WebviewWindowBuilder::new(
         &app,
         "command-palette",
         tauri::WebviewUrl::App("/command-palette".into()),
@@ -25,9 +25,9 @@ async fn open_command_palette(app: tauri::AppHandle) {
     .transparent(true)
     .visible(true)
     .build()
-    .unwrap();
-
-    let _ = command_palette_window.set_focus();
+    .map(|command_palette_window| {
+        let _ = command_palette_window.set_focus();
+    });
 }
 
 #[tauri::command]
