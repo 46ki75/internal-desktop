@@ -14,6 +14,10 @@ async fn open_command_palette(app: tauri::AppHandle) {
         tauri::WebviewUrl::App("/command-palette".into()),
     )
     .title("Command Palette")
+    .inner_size(800.0, 400.0)
+    .decorations(false)
+    .center()
+    .transparent(true)
     .visible(true)
     .build();
 }
