@@ -11,7 +11,7 @@ async fn open_command_palette(app: tauri::AppHandle) {
     let _ = tauri::WebviewWindowBuilder::new(
         &app,
         "command-palette",
-        tauri::WebviewUrl::App("index.html".into()),
+        tauri::WebviewUrl::App("/command-palette".into()),
     )
     .title("Command Palette")
     .visible(true)
