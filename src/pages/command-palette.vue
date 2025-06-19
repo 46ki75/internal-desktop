@@ -11,6 +11,8 @@
 import { ElmCommandPalette } from "@elmethis/command-palette";
 import { invoke } from "@tauri-apps/api/core";
 import { openPath } from "@tauri-apps/plugin-opener";
+import { useWindowFocus } from "@vueuse/core";
+import { watch } from "vue";
 
 export interface CommandPaletteProps {}
 
@@ -19,6 +21,12 @@ withDefaults(defineProps<CommandPaletteProps>(), {});
 const closeCommandPalette = async () => {
   await invoke("close_command_palette");
 };
+
+const wundowFocus = useWindowFocus();
+
+watch(wundowFocus, async (f) => {
+  if (!f) await invoke("close_command_palette");
+});
 
 const openUrl = (url: string) => () => {
   openPath(url);

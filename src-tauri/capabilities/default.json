@@ -19,6 +19,7 @@
           "path": "http://*"
         }
       ]
-    }
+    },
+    "global-shortcut:allow-register"
   ]
 }

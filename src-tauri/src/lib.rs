@@ -8,7 +8,7 @@ fn greet(name: &str) -> String {
 
 #[tauri::command]
 async fn open_command_palette(app: tauri::AppHandle) {
-    let _ = tauri::WebviewWindowBuilder::new(
+    let command_palette_window = tauri::WebviewWindowBuilder::new(
         &app,
         "command-palette",
         tauri::WebviewUrl::App("/command-palette".into()),
@@ -19,11 +19,15 @@ async fn open_command_palette(app: tauri::AppHandle) {
     .resizable(false)
     .always_on_top(true)
     .focused(true)
+    .skip_taskbar(true)
     .shadow(false)
     .center()
     .transparent(true)
     .visible(true)
-    .build();
+    .build()
+    .unwrap();
+
+    let _ = command_palette_window.set_focus();
 }
 
 #[tauri::command]
@@ -39,6 +43,7 @@ async fn close_command_palette(app: tauri::AppHandle) -> bool {
 #[cfg_attr(mobile, tauri::mobile_entry_point)]
 pub fn run() {
     tauri::Builder::default()
+        .plugin(tauri_plugin_global_shortcut::Builder::new().build())
         .plugin(tauri_plugin_opener::init())
         .invoke_handler(tauri::generate_handler![
             greet,
