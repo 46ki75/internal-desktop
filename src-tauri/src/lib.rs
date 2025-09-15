@@ -1,4 +1,4 @@
-pub mod click;
+pub mod command;
 
 use tauri::{
     Manager,
@@ -84,7 +84,7 @@ pub fn run() {
             greet,
             open_command_palette,
             close_command_palette,
-            click::click
+            command::click::click
         ])
         .run(tauri::generate_context!())
         .expect("error while running tauri application");
