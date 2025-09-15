@@ -6,6 +6,7 @@
 import { invoke } from "@tauri-apps/api/core";
 import { register } from "@tauri-apps/plugin-global-shortcut";
 import { onMounted } from "vue";
+import { getCurrentWindow } from "@tauri-apps/api/window";
 
 onMounted(async () => {
   await register("CommandOrControl+Shift+Space", async () => {
@@ -14,6 +15,10 @@ onMounted(async () => {
 
   await register("Esc", async () => {
     await invoke("close_command_palette");
+  });
+
+  getCurrentWindow().onCloseRequested(async (_event) => {
+    await getCurrentWindow().hide();
   });
 });
 </script>
