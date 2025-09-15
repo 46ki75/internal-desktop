@@ -1,7 +1,7 @@
 use tauri::{
     Manager,
     menu::{Menu, MenuItem},
-    tray::TrayIconBuilder,
+    tray::{MouseButton, TrayIconBuilder},
 };
 
 // Learn more about Tauri commands at https://tauri.app/develop/calling-rust/
@@ -50,13 +50,7 @@ pub fn run() {
         .plugin(tauri_plugin_global_shortcut::Builder::new().build())
         .plugin(tauri_plugin_opener::init())
         .setup(|app| {
-            let quit_i = MenuItem::with_id(
-                app,
-                "internal-desktop",
-                "Internal Desktop",
-                true,
-                None::<&str>,
-            )?;
+            let quit_i = MenuItem::with_id(app, "quit", "Quit", true, None::<&str>)?;
             let menu = Menu::with_items(app, &[&quit_i])?;
 
             let _tray = TrayIconBuilder::new()
@@ -69,12 +63,14 @@ pub fn run() {
                     _ => {}
                 })
                 .on_tray_icon_event(|tray, event| {
-                    if let tauri::tray::TrayIconEvent::Click { .. } = event {
-                        let app = tray.app_handle();
-                        if let Some(window) = app.get_webview_window("main") {
-                            let _ = window.unminimize();
-                            let _ = window.show();
-                            let _ = window.set_focus();
+                    if let tauri::tray::TrayIconEvent::Click { button, .. } = event {
+                        if button == MouseButton::Left {
+                            let app = tray.app_handle();
+                            if let Some(window) = app.get_webview_window("main") {
+                                let _ = window.unminimize();
+                                let _ = window.show();
+                                let _ = window.set_focus();
+                            }
                         }
                     }
                 })
