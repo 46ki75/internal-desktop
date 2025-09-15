@@ -1,12 +1,14 @@
 <template>
-  <div>
+  <div :class="$style.root">
     <button @click="open">Open Command Palette Window</button>
     <button @click="close">Close Command Palette Window</button>
+    <Click />
   </div>
 </template>
 
 <script setup lang="ts">
 import { invoke } from "@tauri-apps/api/core";
+import Click from "../components/Click.vue";
 
 const open = async () => {
   console.log("clicked");
@@ -19,4 +21,8 @@ const close = async () => {
 };
 </script>
 
-<style module lang="scss"></style>
+<style module lang="scss">
+.root {
+  padding: 0.5rem;
+}
+</style>

@@ -1,3 +1,5 @@
+pub mod click;
+
 use tauri::{
     Manager,
     menu::{Menu, MenuItem},
@@ -81,7 +83,8 @@ pub fn run() {
         .invoke_handler(tauri::generate_handler![
             greet,
             open_command_palette,
-            close_command_palette
+            close_command_palette,
+            click::click
         ])
         .run(tauri::generate_context!())
         .expect("error while running tauri application");
