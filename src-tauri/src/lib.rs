@@ -86,8 +86,6 @@ pub fn run() {
             open_command_palette,
             close_command_palette,
             command::click::click,
-            command::store::set_value,
-            command::store::get_value,
             command::fetch_bookmark_list::fetch_bookmark_list,
         ])
         .run(tauri::generate_context!())

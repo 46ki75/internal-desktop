@@ -14,7 +14,7 @@
 import Header from "./components/Header.vue";
 import { invoke } from "@tauri-apps/api/core";
 import { register } from "@tauri-apps/plugin-global-shortcut";
-import { onMounted } from "vue";
+import { onMounted, watch } from "vue";
 import { getCurrentWindow } from "@tauri-apps/api/window";
 import { useRoute } from "vue-router";
 import CronManager from "./components/CronManager.vue";
@@ -34,6 +34,14 @@ onMounted(async () => {
     await getCurrentWindow().hide();
   });
 });
+
+watch(route, (route) => {
+  if (route.path === "/command-palette") {
+    document.body.style.overflowY = "hidden";
+  } else {
+    document.body.style.overflowY = "auto";
+  }
+});
 </script>
 
 <style lang="scss">
@@ -42,7 +50,6 @@ body {
   font-family: sans-serif;
   margin: 0;
   padding: 0;
-  overflow-x: hidden;
 }
 
 #app {

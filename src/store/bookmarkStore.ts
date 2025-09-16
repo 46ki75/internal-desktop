@@ -36,6 +36,10 @@ export const useBookmarkStore = defineStore("bookmark", {
         description: b.url,
         keywords: ["any"],
         icon: b.favicon,
+        tag: {
+          name: "URL",
+          color: "blue",
+        },
         onInvoke: b.url ? openUrlWrapper(b.url) : () => {},
       }));
     });
