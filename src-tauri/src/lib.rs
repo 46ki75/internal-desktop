@@ -49,6 +49,7 @@ async fn close_command_palette(app: tauri::AppHandle) -> bool {
 #[cfg_attr(mobile, tauri::mobile_entry_point)]
 pub fn run() {
     tauri::Builder::default()
+        .plugin(tauri_plugin_store::Builder::new().build())
         .plugin(tauri_plugin_global_shortcut::Builder::new().build())
         .plugin(tauri_plugin_opener::init())
         .setup(|app| {
@@ -84,7 +85,10 @@ pub fn run() {
             greet,
             open_command_palette,
             close_command_palette,
-            command::click::click
+            command::click::click,
+            command::store::set_value,
+            command::store::get_value,
+            command::fetch_bookmark_list::fetch_bookmark_list,
         ])
         .run(tauri::generate_context!())
         .expect("error while running tauri application");
