@@ -13,33 +13,20 @@ fn greet(name: &str) -> String {
 }
 
 #[tauri::command]
-async fn open_command_palette(app: tauri::AppHandle) {
-    let _ = tauri::WebviewWindowBuilder::new(
-        &app,
-        "command-palette",
-        tauri::WebviewUrl::App("/command-palette".into()),
-    )
-    .title("Command Palette")
-    .inner_size(800.0, 400.0)
-    .decorations(false)
-    .resizable(false)
-    .always_on_top(true)
-    .focused(true)
-    .skip_taskbar(true)
-    .shadow(false)
-    .center()
-    .transparent(true)
-    .visible(true)
-    .build()
-    .map(|command_palette_window| {
-        let _ = command_palette_window.set_focus();
-    });
+async fn open_command_palette(app: tauri::AppHandle) -> bool {
+    if let Some(window) = app.get_webview_window("command-palette") {
+        let _ = window.show();
+        let result = window.set_focus();
+        result.is_ok()
+    } else {
+        false
+    }
 }
 
 #[tauri::command]
 async fn close_command_palette(app: tauri::AppHandle) -> bool {
     if let Some(window) = app.get_webview_window("command-palette") {
-        let result = window.close();
+        let result = window.hide();
         result.is_ok()
     } else {
         false
@@ -53,6 +40,28 @@ pub fn run() {
         .plugin(tauri_plugin_global_shortcut::Builder::new().build())
         .plugin(tauri_plugin_opener::init())
         .setup(|app| {
+            // create a command palette window
+            let _ = tauri::WebviewWindowBuilder::new(
+                app,
+                "command-palette",
+                tauri::WebviewUrl::App("/command-palette".into()),
+            )
+            .title("Command Palette")
+            .inner_size(1200.0, 600.0)
+            .decorations(false)
+            .resizable(false)
+            .always_on_top(true)
+            .focused(false)
+            .skip_taskbar(true)
+            .shadow(false)
+            .center()
+            .transparent(true)
+            .visible(false)
+            .build()
+            .map(|command_palette_window| {
+                let _ = command_palette_window.set_focus();
+            });
+
             let quit_i = MenuItem::with_id(app, "quit", "Quit", true, None::<&str>)?;
             let menu = Menu::with_items(app, &[&quit_i])?;
 

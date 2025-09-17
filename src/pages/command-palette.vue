@@ -1,6 +1,7 @@
 <template>
   <div :class="$style['command-palette']">
     <ElmCommandPalette
+      v-if="windowFocus"
       :key="bookmarkStore.key"
       :commands="bookmarkStore.commands"
       :on-command-invoked="closeCommandPalette"
@@ -28,7 +29,12 @@ const closeCommandPalette = async () => {
 const windowFocus = useWindowFocus();
 
 watch(windowFocus, async (f) => {
-  if (!f) await invoke("close_command_palette");
+  if (f) {
+    // mounted
+  } else {
+    // unmounted
+    await invoke("close_command_palette");
+  }
 });
 </script>
 
@@ -38,5 +44,6 @@ watch(windowFocus, async (f) => {
   height: 100vh;
   display: flex;
   justify-content: center;
+  opacity: 0.95;
 }
 </style>
