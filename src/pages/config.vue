@@ -40,7 +40,7 @@ import {
   ElmMdiIcon,
   ElmSwitch,
   ElmTextField,
-} from "@elmethis/core";
+} from "@elmethis/vue";
 import { useConfigStore } from "../store/configStore";
 import { mdiButtonPointer } from "@mdi/js";
 import { onMounted, ref, watch } from "vue";

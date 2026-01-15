@@ -1,4 +1,4 @@
-import { ElmCommandPaletteProps } from "@elmethis/command-palette";
+import { ElmCommandPaletteProps } from "@elmethis/vue";
 import { invoke } from "@tauri-apps/api/core";
 import { openUrl } from "@tauri-apps/plugin-opener";
 import { useLocalStorage } from "@vueuse/core";

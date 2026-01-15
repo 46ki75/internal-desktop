@@ -10,9 +10,9 @@
 </template>
 
 <script setup lang="ts">
-import { ElmCommandPalette } from "@elmethis/command-palette";
 import { invoke } from "@tauri-apps/api/core";
 import { useWindowFocus } from "@vueuse/core";
+import { ElmCommandPalette } from "@elmethis/vue";
 import { watch } from "vue";
 import { useBookmarkStore } from "../store/bookmarkStore";
 

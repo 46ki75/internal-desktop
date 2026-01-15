@@ -10,8 +10,7 @@
     "tauri": "tauri"
   },
   "dependencies": {
-    "@elmethis/command-palette": "^0.3.0",
-    "@elmethis/core": "^0.6.3",
+    "@elmethis/vue": "^0.2.7",
     "@mdi/js": "^7.4.47",
     "@tauri-apps/api": "^2.8.0",
     "@tauri-apps/plugin-autostart": "~2.5.1",

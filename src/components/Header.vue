@@ -15,7 +15,7 @@
 </template>
 
 <script setup lang="ts">
-import { ElmMdiIcon } from "@elmethis/core";
+import { ElmMdiIcon } from "@elmethis/vue";
 import { mdiCog, mdiHome } from "@mdi/js";
 import { useRoute } from "vue-router";
 
