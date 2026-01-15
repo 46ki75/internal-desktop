@@ -14,6 +14,13 @@
       icon="link"
       :loading="configStore.loading"
     />
+
+    <div :class="$style['switch-container']">
+      <ElmMdiIcon :d="mdiButtonPointer" size="1.5rem" />
+      <ElmInlineText>Enable Autostart</ElmInlineText>
+      <ElmSwitch v-model="isAutostartEnabled" color="#bfa056" size="1rem" />
+    </div>
+
     <ElmButton block @click="handleSet" :loading="configStore.loading">
       Update
     </ElmButton>
@@ -21,8 +28,16 @@
 </template>
 
 <script setup lang="ts">
-import { ElmButton, ElmHeading, ElmTextField } from "@elmethis/core";
+import {
+  ElmButton,
+  ElmHeading,
+  ElmInlineText,
+  ElmMdiIcon,
+  ElmSwitch,
+  ElmTextField,
+} from "@elmethis/core";
 import { useConfigStore } from "../store/configStore";
+import { mdiButtonPointer } from "@mdi/js";
 import { onMounted, ref } from "vue";
 
 export interface ConfigProps {}
@@ -32,6 +47,7 @@ withDefaults(defineProps<ConfigProps>(), {});
 const configStore = useConfigStore();
 const notionApiKey = ref<string>();
 const notionBookmarkDataSourceId = ref<string>();
+const isAutostartEnabled = ref<boolean>(false);
 
 onMounted(async () => {
   notionApiKey.value = (await configStore.get("notionApiKey")) as string;
@@ -57,6 +73,13 @@ const handleSet = async () => {
 .container {
   display: flex;
   flex-direction: column;
-  gap: 1rem;
+  gap: 2rem;
+}
+
+.switch-container {
+  display: grid;
+  grid-template-columns: 3rem 1fr 4rem;
+  align-items: center;
+  user-select: none;
 }
 </style>
