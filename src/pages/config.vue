@@ -14,16 +14,37 @@
       icon="link"
       :loading="configStore.loading"
     />
+
     <ElmButton block @click="handleSet" :loading="configStore.loading">
       Update
     </ElmButton>
+
+    <div :class="$style['switch-container']">
+      <ElmMdiIcon :d="mdiButtonPointer" size="1.5rem" />
+      <ElmInlineText>Enable Autostart</ElmInlineText>
+      <ElmSwitch
+        v-model="isAutostartEnabled"
+        :disabled="isAutostartEnabledLoading"
+        color="#bfa056"
+        size="1rem"
+      />
+    </div>
   </div>
 </template>
 
 <script setup lang="ts">
-import { ElmButton, ElmHeading, ElmTextField } from "@elmethis/core";
+import {
+  ElmButton,
+  ElmHeading,
+  ElmInlineText,
+  ElmMdiIcon,
+  ElmSwitch,
+  ElmTextField,
+} from "@elmethis/vue";
 import { useConfigStore } from "../store/configStore";
-import { onMounted, ref } from "vue";
+import { mdiButtonPointer } from "@mdi/js";
+import { onMounted, ref, watch } from "vue";
+import { enable, isEnabled, disable } from "@tauri-apps/plugin-autostart";
 
 export interface ConfigProps {}
 
@@ -32,12 +53,22 @@ withDefaults(defineProps<ConfigProps>(), {});
 const configStore = useConfigStore();
 const notionApiKey = ref<string>();
 const notionBookmarkDataSourceId = ref<string>();
+const isAutostartEnabledLoading = ref<boolean>(true);
+const isAutostartEnabled = ref<boolean>(false);
 
 onMounted(async () => {
   notionApiKey.value = (await configStore.get("notionApiKey")) as string;
   notionBookmarkDataSourceId.value = (await configStore.get(
     "notionBookmarkDataSourceId"
   )) as string;
+
+  // Autostart
+  try {
+    isAutostartEnabledLoading.value = true;
+    isAutostartEnabled.value = await isEnabled();
+  } finally {
+    isAutostartEnabledLoading.value = false;
+  }
 });
 
 const handleSet = async () => {
@@ -51,12 +82,34 @@ const handleSet = async () => {
     });
   }
 };
+
+watch(isAutostartEnabled, async (isAutostartEnabledValue) => {
+  try {
+    isAutostartEnabledLoading.value = true;
+    if (isAutostartEnabledValue) {
+      await enable();
+      isAutostartEnabled.value = await isEnabled();
+    } else {
+      await disable();
+      isAutostartEnabled.value = await isEnabled();
+    }
+  } finally {
+    isAutostartEnabledLoading.value = false;
+  }
+});
 </script>
 
 <style module lang="scss">
 .container {
   display: flex;
   flex-direction: column;
-  gap: 1rem;
+  gap: 2rem;
+}
+
+.switch-container {
+  display: grid;
+  grid-template-columns: 3rem 1fr 4rem;
+  align-items: center;
+  user-select: none;
 }
 </style>

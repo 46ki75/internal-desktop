@@ -21,7 +21,7 @@ import {
   ElmProgress,
   ElmInlineText,
   ElmMdiIcon,
-} from "@elmethis/core";
+} from "@elmethis/vue";
 import { invoke } from "@tauri-apps/api/core";
 import { onUnmounted, ref, watch } from "vue";
 import { mdiLightningBolt, mdiSleep } from "@mdi/js";

@@ -15,7 +15,7 @@
 
 <script setup lang="ts">
 import Click from "../components/Click.vue";
-import { ElmInlineText } from "@elmethis/core";
+import { ElmInlineText } from "@elmethis/vue";
 </script>
 
 <style module lang="scss"></style>
