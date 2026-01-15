@@ -15,6 +15,10 @@
       :loading="configStore.loading"
     />
 
+    <ElmButton block @click="handleSet" :loading="configStore.loading">
+      Update
+    </ElmButton>
+
     <div :class="$style['switch-container']">
       <ElmMdiIcon :d="mdiButtonPointer" size="1.5rem" />
       <ElmInlineText>Enable Autostart</ElmInlineText>
@@ -25,10 +29,6 @@
         size="1rem"
       />
     </div>
-
-    <ElmButton block @click="handleSet" :loading="configStore.loading">
-      Update
-    </ElmButton>
   </div>
 </template>
 
