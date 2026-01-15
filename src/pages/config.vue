@@ -18,7 +18,12 @@
     <div :class="$style['switch-container']">
       <ElmMdiIcon :d="mdiButtonPointer" size="1.5rem" />
       <ElmInlineText>Enable Autostart</ElmInlineText>
-      <ElmSwitch v-model="isAutostartEnabled" color="#bfa056" size="1rem" />
+      <ElmSwitch
+        v-model="isAutostartEnabled"
+        :disabled="isAutostartEnabledLoading"
+        color="#bfa056"
+        size="1rem"
+      />
     </div>
 
     <ElmButton block @click="handleSet" :loading="configStore.loading">
@@ -38,7 +43,8 @@ import {
 } from "@elmethis/core";
 import { useConfigStore } from "../store/configStore";
 import { mdiButtonPointer } from "@mdi/js";
-import { onMounted, ref } from "vue";
+import { onMounted, ref, watch } from "vue";
+import { enable, isEnabled, disable } from "@tauri-apps/plugin-autostart";
 
 export interface ConfigProps {}
 
@@ -47,6 +53,7 @@ withDefaults(defineProps<ConfigProps>(), {});
 const configStore = useConfigStore();
 const notionApiKey = ref<string>();
 const notionBookmarkDataSourceId = ref<string>();
+const isAutostartEnabledLoading = ref<boolean>(true);
 const isAutostartEnabled = ref<boolean>(false);
 
 onMounted(async () => {
@@ -54,6 +61,14 @@ onMounted(async () => {
   notionBookmarkDataSourceId.value = (await configStore.get(
     "notionBookmarkDataSourceId"
   )) as string;
+
+  // Autostart
+  try {
+    isAutostartEnabledLoading.value = true;
+    isAutostartEnabled.value = await isEnabled();
+  } finally {
+    isAutostartEnabledLoading.value = false;
+  }
 });
 
 const handleSet = async () => {
@@ -67,6 +82,21 @@ const handleSet = async () => {
     });
   }
 };
+
+watch(isAutostartEnabled, async (isAutostartEnabledValue) => {
+  try {
+    isAutostartEnabledLoading.value = true;
+    if (isAutostartEnabledValue) {
+      await enable();
+      isAutostartEnabled.value = await isEnabled();
+    } else {
+      await disable();
+      isAutostartEnabled.value = await isEnabled();
+    }
+  } finally {
+    isAutostartEnabledLoading.value = false;
+  }
+});
 </script>
 
 <style module lang="scss">
