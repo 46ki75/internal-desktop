@@ -1,5 +1,16 @@
 <template>
   <div :class="$style.container">
+    <div :class="$style['switch-container']">
+      <ElmMdiIcon :d="mdiButtonPointer" size="1.5rem" />
+      <ElmInlineText>Enable Autostart</ElmInlineText>
+      <ElmSwitch
+        v-model="isAutostartEnabled"
+        :disabled="isAutostartEnabledLoading"
+        color="#bfa056"
+        size="1rem"
+      />
+    </div>
+
     <ElmHeading :level="2"> Notion API Key</ElmHeading>
     <ElmTextField
       v-model="notionApiKey"
@@ -19,16 +30,24 @@
       Update
     </ElmButton>
 
-    <div :class="$style['switch-container']">
-      <ElmMdiIcon :d="mdiButtonPointer" size="1.5rem" />
-      <ElmInlineText>Enable Autostart</ElmInlineText>
-      <ElmSwitch
-        v-model="isAutostartEnabled"
-        :disabled="isAutostartEnabledLoading"
-        color="#bfa056"
-        size="1rem"
-      />
-    </div>
+    <ElmHeading :level="2"> OAuth</ElmHeading>
+    <ElmTextField
+      v-model="oauthClientId"
+      label="OAuth Client ID"
+      icon="user"
+      is-password
+      :loading="configStore.loading"
+    />
+    <ElmTextField
+      v-model="oauthClientSecret"
+      label="OAuth Client Secret"
+      icon="key"
+      :loading="configStore.loading"
+    />
+
+    <ElmButton block @click="handleSet" :loading="configStore.loading">
+      Update
+    </ElmButton>
   </div>
 </template>
 
@@ -53,6 +72,8 @@ withDefaults(defineProps<ConfigProps>(), {});
 const configStore = useConfigStore();
 const notionApiKey = ref<string>();
 const notionBookmarkDataSourceId = ref<string>();
+const oauthClientId = ref<string>();
+const oauthClientSecret = ref<string>();
 const isAutostartEnabledLoading = ref<boolean>(true);
 const isAutostartEnabled = ref<boolean>(false);
 
@@ -79,6 +100,15 @@ const handleSet = async () => {
     await configStore.set({
       key: "notionBookmarkDataSourceId",
       value: notionBookmarkDataSourceId.value,
+    });
+  }
+  if (oauthClientId.value) {
+    await configStore.set({ key: "oauthClientId", value: oauthClientId.value });
+  }
+  if (oauthClientSecret.value) {
+    await configStore.set({
+      key: "oauthClientSecret",
+      value: oauthClientSecret.value,
     });
   }
 };
