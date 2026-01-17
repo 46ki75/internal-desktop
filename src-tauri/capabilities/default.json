@@ -28,9 +28,16 @@
       "allow": [
         {
           "url": "https://*.ikuma.cloud"
+        },
+        {
+          "url": "https://*.auth.ap-northeast-1.amazoncognito.com"
         }
       ],
       "deny": []
-    }
+    },
+    "http:allow-fetch",
+    "http:allow-fetch-cancel",
+    "http:allow-fetch-read-body",
+    "http:allow-fetch-send"
   ]
 }
