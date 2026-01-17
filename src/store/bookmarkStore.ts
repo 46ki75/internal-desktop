@@ -1,24 +1,14 @@
 import { ElmCommandPaletteProps } from "@elmethis/vue";
-import { invoke } from "@tauri-apps/api/core";
 import { openUrl } from "@tauri-apps/plugin-opener";
 import { useLocalStorage } from "@vueuse/core";
 import { defineStore } from "pinia";
 import { ref, watch } from "vue";
+import { openApiClient } from "../openapi/client";
+import { useAuthStore } from "./authStore";
+import { paths } from "../openapi/schema";
 
-interface Bookmark {
-  id: string;
-  name?: string;
-  url?: string;
-  favicon?: string;
-  tag: {
-    id: String;
-    name: string;
-    color: String;
-  };
-  nsfw: boolean;
-  favorite: boolean;
-  notion_url: String;
-}
+type Bookmark =
+  paths["/api/v1/bookmark"]["get"]["responses"]["200"]["content"]["application/json"][number];
 
 const openUrlWrapper = (url: string) => () => {
   openUrl(url);
@@ -33,14 +23,14 @@ export const useBookmarkStore = defineStore("bookmark", {
       commands.value = bookmarkList.map((b) => ({
         id: b.id,
         label: b.name || "No Title",
-        description: b.url,
+        description: b.url ?? undefined,
         keywords: ["any"],
-        icon: b.favicon,
+        icon: b.favicon ?? undefined,
         tag: {
           name: "URL",
           color: "blue",
         },
-        onInvoke: b.url ? openUrlWrapper(b.url) : () => {},
+        onInvoke: b.url ? openUrlWrapper(b.url) : undefined,
       }));
     });
 
@@ -53,7 +43,28 @@ export const useBookmarkStore = defineStore("bookmark", {
 
   actions: {
     async fetchBookmarkList() {
-      this.bookmarkList = await invoke<Bookmark[]>("fetch_bookmark_list");
+      // this.bookmarkList = await invoke<Bookmark[]>("fetch_bookmark_list");
+
+      const authStore = useAuthStore();
+      await authStore.refreshAccessToken();
+      const accessToken = authStore.accessToken;
+
+      if (!accessToken) {
+        throw new Error("No access token available.");
+      }
+
+      const response = await openApiClient.GET("/api/v1/bookmark", {
+        params: { header: { Authorization: accessToken } },
+      });
+
+      const bookmarks = response.data;
+
+      if (!Array.isArray(bookmarks)) {
+        throw new Error("Invalid bookmark data received.");
+      }
+
+      this.bookmarkList = bookmarks;
+
       this.key = this.key + 1;
     },
   },
