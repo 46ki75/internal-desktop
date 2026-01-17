@@ -45,27 +45,31 @@ export const useBookmarkStore = defineStore("bookmark", {
     async fetchBookmarkList() {
       // this.bookmarkList = await invoke<Bookmark[]>("fetch_bookmark_list");
 
-      const authStore = useAuthStore();
-      await authStore.refreshAccessToken();
-      const accessToken = authStore.accessToken;
+      try {
+        const authStore = useAuthStore();
+        await authStore.refreshAccessToken();
+        const accessToken = authStore.accessToken;
 
-      if (!accessToken) {
-        throw new Error("No access token available.");
+        if (!accessToken) {
+          throw new Error("No access token available.");
+        }
+
+        const response = await openApiClient.GET("/api/v1/bookmark", {
+          params: { header: { Authorization: accessToken } },
+        });
+
+        const bookmarks = response.data;
+
+        if (!Array.isArray(bookmarks)) {
+          throw new Error("Invalid bookmark data received.");
+        }
+
+        this.bookmarkList = bookmarks;
+
+        this.key = this.key + 1;
+      } catch (error) {
+        console.error(error);
       }
-
-      const response = await openApiClient.GET("/api/v1/bookmark", {
-        params: { header: { Authorization: accessToken } },
-      });
-
-      const bookmarks = response.data;
-
-      if (!Array.isArray(bookmarks)) {
-        throw new Error("Invalid bookmark data received.");
-      }
-
-      this.bookmarkList = bookmarks;
-
-      this.key = this.key + 1;
     },
   },
 });
