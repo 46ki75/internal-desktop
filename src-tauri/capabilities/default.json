@@ -23,6 +23,14 @@
     "global-shortcut:allow-register",
     "core:window:allow-close",
     "core:window:allow-hide",
-    "http:default"
+    {
+      "identifier": "http:default",
+      "allow": [
+        {
+          "url": "https://*.ikuma.cloud"
+        }
+      ],
+      "deny": []
+    }
   ]
 }
