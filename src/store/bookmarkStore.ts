@@ -55,8 +55,12 @@ export const useBookmarkStore = defineStore("bookmark", {
         }
 
         const response = await openApiClient.GET("/api/v1/bookmark", {
-          params: { header: { Authorization: accessToken } },
+          params: { header: { Authorization: `Bearer ${accessToken}` } },
         });
+
+        if (response.error) {
+          throw new Error(response.error);
+        }
 
         const bookmarks = response.data;
 
