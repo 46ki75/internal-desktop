@@ -16,13 +16,13 @@
       v-model="notionApiKey"
       label="API Key"
       icon="key"
-      is-password
       :loading="configStore.loading"
     />
     <ElmTextField
       v-model="notionBookmarkDataSourceId"
       label="Notion Bookmark Data Source ID"
       icon="link"
+      is-password
       :loading="configStore.loading"
     />
 
@@ -80,7 +80,7 @@ const isAutostartEnabled = ref<boolean>(false);
 onMounted(async () => {
   notionApiKey.value = (await configStore.get("notionApiKey")) as string;
   notionBookmarkDataSourceId.value = (await configStore.get(
-    "notionBookmarkDataSourceId"
+    "notionBookmarkDataSourceId",
   )) as string;
 
   // Autostart
