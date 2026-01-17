@@ -1,6 +1,7 @@
 import { defineStore } from "pinia";
 import { useConfigStore } from "./configStore";
 import { z } from "zod";
+import { fetch } from "@tauri-apps/plugin-http";
 
 const tokenResponseSchema = z.object({
   access_token: z.string(),
