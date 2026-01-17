@@ -27,6 +27,7 @@ tauri-plugin-store = "2"
 notionrs = "0.3.0"
 notionrs_types = "0.3.0"
 futures = "0.3.31"
+tauri-plugin-http = "2"
 
 [target.'cfg(not(any(target_os = "android", target_os = "ios")))'.dependencies]
 tauri-plugin-autostart = "2"
