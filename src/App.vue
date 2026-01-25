@@ -26,10 +26,6 @@ onMounted(async () => {
     await invoke("open_command_palette");
   });
 
-  await register("Esc", async () => {
-    await invoke("close_command_palette");
-  });
-
   getCurrentWindow().onCloseRequested(async (_event) => {
     await getCurrentWindow().hide();
   });
@@ -59,7 +55,9 @@ body {
 
 .fade-enter-active,
 .fade-leave-active {
-  transition: opacity 150ms, transform 100ms;
+  transition:
+    opacity 150ms,
+    transform 100ms;
 }
 .fade-enter-from,
 .fade-leave-to {
